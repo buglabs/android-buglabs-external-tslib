@@ -25,8 +25,13 @@ int main()
 	struct tsdev *ts;
 	char *tsdevice=NULL;
 
+	struct tssetting *tset;
+	tset = ts_setting(TS_ENV);
+
 	if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
 		ts = ts_open(tsdevice,0);
+	} else if ( tset != NULL ) {
+		ts = ts_open(tset->tsdev, 0);
 	} else {
 		if (!(ts = ts_open("/dev/input/event0", 0)))
 			ts = ts_open("/dev/touchscreen/ucb1x00", 0);
@@ -59,4 +64,6 @@ int main()
 		printf("%ld.%06ld: %6d %6d %6d\n", samp.tv.tv_sec, samp.tv.tv_usec, samp.x, samp.y, samp.pressure);
 
 	}
+	free(tset);
+	return 0;
 }

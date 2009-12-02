@@ -30,10 +30,17 @@ int ts_config(struct tsdev *ts)
 	int line = 0;
 	int ret = 0;
 
+	struct tssetting *tset;
+	tset = ts_setting(TS_ENV);
+
 	char *conffile;
 
 	if( (conffile = getenv("TSLIB_CONFFILE")) == NULL) {
-		conffile = strdup (TS_CONF);
+		if (tset != NULL) {
+			conffile = tset->conffile;
+		} else {
+			conffile = strdup (TS_CONF);
+		}
 	}
 
 	f = fopen(conffile, "r");
@@ -95,6 +102,6 @@ int ts_config(struct tsdev *ts)
 	}
 
 	fclose(f);
-
+	free(tset);
 	return ret;
 }

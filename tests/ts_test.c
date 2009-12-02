@@ -116,12 +116,17 @@ int main()
 
 	char *tsdevice=NULL;
 
+	struct tssetting *tset;
+	tset = ts_setting(TS_ENV);
+
 	signal(SIGSEGV, sig);
 	signal(SIGINT, sig);
 	signal(SIGTERM, sig);
 
 	if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
 		ts = ts_open(tsdevice,0);
+	} else if (tset != NULL) {
+		ts = ts_open(tset->tsdev, 0);
 	} else {
 		if (!(ts = ts_open("/dev/input/event0", 0)))
 			ts = ts_open("/dev/touchscreen/ucb1x00", 0);
@@ -214,5 +219,7 @@ int main()
 		if (quit_pressed)
 			break;
 	}
+	free(tset);
 	close_framebuffer();
+	return 0;
 }

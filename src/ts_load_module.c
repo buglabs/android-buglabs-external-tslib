@@ -31,9 +31,14 @@ int __ts_load_module(struct tsdev *ts, const char *module, const char *params, i
 	int ret;
 	char *plugin_directory=NULL;
 
+	struct tssetting *tset;
+	tset = ts_setting(TS_ENV);
+
 	if( (plugin_directory = getenv("TSLIB_PLUGINDIR")) != NULL ) {
 		//fn = alloca(sizeof(plugin_directory) + strlen(module) + 4);
 		strcpy(fn,plugin_directory);
+	} else if (tset != NULL) {
+		strcpy(fn,tset->plugdir);
 	} else {
 		//fn = alloca(sizeof(PLUGIN_DIR) + strlen(module) + 4);
 		strcpy(fn, PLUGIN_DIR);
@@ -87,6 +92,7 @@ int __ts_load_module(struct tsdev *ts, const char *module, const char *params, i
 		dlclose(handle);
 	}
 
+	free(tset);
 	return ret;
 }
 

@@ -70,12 +70,17 @@ int main()
 	struct ts_sample samp;
 	FILE *output_fid;
 
+	struct tssetting *tset;
+	tset = ts_setting(TS_ENV);
+
 	signal(SIGSEGV, sig);
 	signal(SIGINT, sig);
 	signal(SIGTERM, sig);
 
 	if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
 		ts = ts_open(tsdevice,0);
+	} else if (tset != NULL) {
+		ts = ts_open(tset->tsdev, 0);
 	} else {
 		if (!(ts = ts_open("/dev/input/event0", 0)))
 			ts = ts_open("/dev/touchscreen/ucb1x00", 0);
@@ -198,6 +203,7 @@ int main()
 	put_string_center (xres/2, yres*0.85, "Touch anywhere to quit", 4);
 	getxy (ts, &x_ts, &y_ts); 
 	refresh_screen ();
+	free(tset);
 	close_framebuffer();
 	return 0;
 }

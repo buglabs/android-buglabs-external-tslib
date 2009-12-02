@@ -29,6 +29,8 @@ struct tsdev {
 	int rotation;
 };
 
+struct tssetting;
+
 int __ts_attach(struct tsdev *ts, struct tslib_module_info *info);
 int __ts_attach_raw(struct tsdev *ts, struct tslib_module_info *info);
 int ts_load_module(struct tsdev *dev, const char *module, const char *params);

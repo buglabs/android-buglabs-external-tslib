@@ -5,6 +5,7 @@ LOCAL_SRC_FILES:= \
 	ts_attach.c \
 	ts_close.c \
 	ts_config.c \
+	ts_setting.c \
 	ts_error.c \
 	ts_fd.c \
 	ts_load_module.c \
@@ -16,6 +17,7 @@ LOCAL_SRC_FILES:= \
 #include $(LOCAL_PATH)/../android-config.mk
 LOCAL_CFLAGS += -DPLUGIN_DIR=\"/system/lib/ts\" \
 		-DTS_CONF=\"/system/etc/ts.conf\" \
+		-DTS_ENV=\"/system/etc/ts.env\" \
 		-DTSLIB_INTERNAL
 LOCAL_C_INCLUDES += \
 	external/tslib \

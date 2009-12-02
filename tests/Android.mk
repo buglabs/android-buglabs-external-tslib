@@ -7,7 +7,8 @@ INCLUDES += \
 	external/tslib/tests
 
 CFLAGS += -DTS_POINTERCAL=\"/system/etc/pointercal\" \
-		-DGCC_HASCLASSVISIBILITY
+	  -DTS_ENV=\"/system/etc/ts.env\" \
+	  -DGCC_HASCLASSVISIBILITY
 
 SRC_FILES += fbutils.c \
 	     font_8x8.c \

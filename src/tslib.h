@@ -40,6 +40,16 @@ extern "C" {
 
 struct tsdev;
 
+struct tssetting
+{
+        char *tsdev;
+        char *fbdev;
+        char *calfile;
+        char *conffile;
+        char *condev;
+        char *plugdir;
+};
+
 struct ts_sample {
 	int		x;
 	int		y;
@@ -86,6 +96,11 @@ TSAPI int ts_load_module(struct tsdev *, const char *mod, const char *params);
  * Open the touchscreen device.
  */
 TSAPI struct tsdev *ts_open(const char *dev_name, int nonblock);
+
+/*
+ * Get environment variables from settings file rather then environment.
+ */
+TSAPI struct tssetting *ts_setting(const char *filename);
 
 /*
  * Return a scaled touchscreen sample.

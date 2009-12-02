@@ -186,6 +186,7 @@ static int clearbuf(struct tsdev *ts)
 			exit(1);
 		}
 	}
+	return 0;
 }
 
 int main()
@@ -202,8 +203,13 @@ int main()
 	signal(SIGINT, sig);
 	signal(SIGTERM, sig);
 
+	struct tssetting *tset;
+	tset = ts_setting(TS_ENV);
+
 	if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
 		ts = ts_open(tsdevice,0);
+	} else if (tset != NULL) {
+		ts = ts_open(tset->tsdev, 0);
 	} else {
 		if (!(ts = ts_open("/dev/input/event0", 0)))
 			ts = ts_open("/dev/touchscreen/ucb1x00", 0);
@@ -253,6 +259,9 @@ int main()
 		if ((calfile = getenv("TSLIB_CALIBFILE")) != NULL) {
 			cal_fd = open (calfile, O_CREAT | O_RDWR,
 			               S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+		} else if (tset != NULL) {
+			cal_fd = open (tset->calfile, O_CREAT | O_RDWR,
+					S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		} else {
 			cal_fd = open (TS_POINTERCAL, O_CREAT | O_RDWR,
 			               S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -269,6 +278,7 @@ int main()
 		i = -1;
 	}
 
+	free(tset);
 	close_framebuffer();
 	return i;
 }

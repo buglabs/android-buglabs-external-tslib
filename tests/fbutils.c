@@ -25,6 +25,8 @@
 #include <linux/kd.h>
 #include <linux/fb.h>
 
+#include "tslib.h"
+
 #include "font.h"
 #include "fbutils.h"
 
@@ -56,11 +58,24 @@ int open_framebuffer(void)
 	int fd, nr;
 	unsigned y, addr;
 
-	if ((fbdevice = getenv ("TSLIB_FBDEVICE")) == NULL)
-		fbdevice = defaultfbdevice;
+	struct tssetting *tset;
+	tset = ts_setting(TS_ENV);
 
-	if ((consoledevice = getenv ("TSLIB_CONSOLEDEVICE")) == NULL)
-		consoledevice = defaultconsoledevice;
+	if ((fbdevice = getenv ("TSLIB_FBDEVICE")) == NULL) {
+		if (tset != NULL) {
+			fbdevice = tset->fbdev;
+		} else {
+			fbdevice = defaultfbdevice;
+		}
+	}
+
+	if ((consoledevice = getenv ("TSLIB_CONSOLEDEVICE")) == NULL) {
+		if (tset != NULL) {
+			consoledevice = tset->condev;
+		} else {
+			consoledevice = defaultconsoledevice;
+		}
+	}
 
 	if (strcmp (consoledevice, "none") != 0) {
 		sprintf (vtname,"%s%d", consoledevice, 1);
@@ -141,6 +156,7 @@ int open_framebuffer(void)
 	for (y = 0; y < var.yres_virtual; y++, addr += fix.line_length)
 		line_addr [y] = fbuffer + addr;
 
+	free(tset);
 	return 0;
 }
 
