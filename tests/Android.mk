@@ -6,7 +6,7 @@ INCLUDES += \
 	external/tslib/src \
 	external/tslib/tests
 
-CFLAGS += -DTS_POINTERCAL=\"/system/etc/pointercal\" \
+CFLAGS += -DTS_POINTERCAL=\"/data/system/tslib/pointercal\" \
 	  -DTS_ENV=\"/system/etc/ts.env\" \
 	  -DGCC_HASCLASSVISIBILITY
 

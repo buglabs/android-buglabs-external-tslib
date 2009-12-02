@@ -6,7 +6,7 @@ C_INCLUDES += \
 	external/tslib/src \
 	external/tslib/plugins
 
-CFLAGS += -DTS_POINTERCAL=\"/system/etc/pointercal\" \
+CFLAGS += -DTS_POINTERCAL=\"/data/system/tslib/pointercal\" \
 	  -DTS_ENV=\"/system/etc/ts.env\" \
 	  -DTSLIB_INTERNAL \
 	  -DGCC_HASCLASSVISIBILITY
