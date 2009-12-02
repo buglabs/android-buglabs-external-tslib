@@ -1,0 +1,4 @@
+Don't have android install ts.conf.
+This should be done by the Target Product.
+Copy the ts.conf to vendor/<company>/<product> and install it from there.
+Also include a premade pointercal if you wish.
