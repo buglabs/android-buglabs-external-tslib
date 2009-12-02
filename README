@@ -1,4 +1,3 @@
-$Id: README,v 1.4 2004/07/21 19:12:58 dlowder Exp $
 
 General
 =======
@@ -54,6 +53,19 @@ TSLIB_CONSOLEDEVICE		Console device.
 				Default: /dev/tty
 TSLIB_FBDEVICE			Framebuffer device.
 				Default: /dev/fb0
+
+Alternatively, use ${sysconfdir}/ts.env to store these configuration
+parameters. Some java terminals do not inherit environment variables, and
+having to type the environment variables everytime can be a pain. The format of
+ts.env should be the same as entering the environment variables into a flat 
+file:
+
+TSLIB_TSDEVICE=/dev/input/event2
+TSLIB_CALIBFILE=/etc/pointercal
+<key>=<value>
+
+Empty lines, lines starting with '#', lines longer then 512 bytes, and lines
+that don't follow the previous three lines will be ignored.
 
 
 Module Creation Notes
