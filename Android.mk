@@ -1,9 +1,3 @@
-LOCAL_PATH := $(call my-dir)
-
-subdirs := $(addprefix $(LOCAL_PATH)/,$(addsuffix /Android.mk, \
-		plugins \
-		src \
-		tests \
-	))
-
-include $(subdirs)
+ifeq ($(BOARD_USES_TSLIB),true)
+include $(call all-subdir-makefiles)
+endif
