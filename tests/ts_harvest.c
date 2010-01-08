@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
-#include <sys/fcntl.h>
+#include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/time.h>
