@@ -103,7 +103,7 @@ static int check_fd(struct tslib_input *i)
 	we set it to constant 255. It's still controlled by BTN_TOUCH - when not
 	touched, the pressure is forced to 0. */
 
-	if (!(absbit[BIT_WORD(ABS_PRESSURE)] & BIT_MASK(ABS_PRESSURE))) {
+	if (1 || !(absbit[BIT_WORD(ABS_PRESSURE)] & BIT_MASK(ABS_PRESSURE))) {
 		i->current_p = 255;
 
 		if ((ioctl(ts->fd, EVIOCGBIT(EV_KEY, sizeof(keybit)), keybit) < 0) ||
