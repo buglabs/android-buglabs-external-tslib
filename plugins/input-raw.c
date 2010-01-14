@@ -154,6 +154,7 @@ static int ts_input_read(struct tslib_module_info *inf,
 			case EV_KEY:
 				switch (ev.code) {
 				case BTN_TOUCH:
+				case BTN_MOUSE:
 					if (ev.value == 0) {
 						/* pen up */
 						i->current_x = 0;
@@ -180,9 +181,11 @@ static int ts_input_read(struct tslib_module_info *inf,
 			case EV_ABS:
 				switch (ev.code) {
 				case ABS_X:
+				case ABS_Z:
 					i->current_x = ev.value;
 					break;
 				case ABS_Y:
+				case ABS_RX:
 					i->current_y = ev.value;
 					break;
 				case ABS_PRESSURE:
@@ -219,6 +222,7 @@ static int ts_input_read(struct tslib_module_info *inf,
 			if (ev.type == EV_ABS) {
 				switch (ev.code) {
 				case ABS_X:
+				case ABS_Z:
 					if (ev.value != 0) {
 						samp->x = i->current_x = ev.value;
 						samp->y = i->current_y;
@@ -229,6 +233,7 @@ static int ts_input_read(struct tslib_module_info *inf,
 					}
 					break;
 				case ABS_Y:
+				case ABS_RX:
 					if (ev.value != 0) {
 						samp->x = i->current_x;
 						samp->y = i->current_y = ev.value;
@@ -254,6 +259,7 @@ static int ts_input_read(struct tslib_module_info *inf,
 			} else if (ev.type == EV_KEY) {
 				switch (ev.code) {
 				case BTN_TOUCH:
+				case BTN_MOUSE:
 					if (ev.value == 0) {
 						/* pen up */
 						samp->x = 0;
