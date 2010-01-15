@@ -198,6 +198,17 @@ int main()
 	char *tsdevice = NULL;
 	char *calfile = NULL;
 	unsigned int i, len;
+	pid_t child;
+
+	child = fork();
+	if (child > 0) {
+		getchar();
+		kill(child, SIGKILL);
+		exit(0);
+	} else if (child < 0) {
+		perror("fork");
+		exit(-1);
+	}
 
 	signal(SIGSEGV, sig);
 	signal(SIGINT, sig);
@@ -240,8 +251,11 @@ int main()
 			   "TSLIB calibration utility", 1);
 	put_string_center (xres / 2, yres / 4 + 20,
 			   "Touch crosshair to calibrate", 2);
+	put_string_center (xres / 2, yres / 4 + 40,
+			   "Press Enter to skip", 2);
 
-	printf("xres = %d, yres = %d\n", xres, yres);
+	sprintf(cal_buffer, "Resolution %d x %d", xres, yres);
+	put_string_center (xres / 2, yres / 4 + 70, cal_buffer, 3);
 
 	// Clear the buffer
 	clearbuf(ts);
@@ -284,5 +298,6 @@ int main()
 
 	free(tset);
 	close_framebuffer();
+	kill(getppid(), SIGTERM);
 	return i;
 }
