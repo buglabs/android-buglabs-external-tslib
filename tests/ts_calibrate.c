@@ -207,19 +207,23 @@ int main()
 	tset = ts_setting(TS_ENV);
 
 	if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
-		ts = ts_open(tsdevice,0);
+		ts = open_touchdev(tsdevice);
 	} else if (tset != NULL) {
-		ts = ts_open(tset->tsdev, 0);
-	} else {
-		if (!(ts = ts_open("/dev/input/event0", 0)))
-			ts = ts_open("/dev/touchscreen/ucb1x00", 0);
+		ts = open_touchdev(tset->tsdev);
+	}
+	if (!ts) {
+		char tsdevice[20];
+		/* CW: a lazy way to go through all events.. is 99 enough? */
+		for (i = 0; i <= 99; ++i) {
+			sprintf(tsdevice, "/dev/input/event%d", i);
+			if ((ts = open_touchdev(tsdevice)))
+				break;
+		}
+		if (!ts)
+			ts = open_touchdev("/dev/touchscreen/ucb1x00");
 	}
 
 	if (!ts) {
-		perror("ts_open");
-		exit(1);
-	}
-	if (ts_config(ts)) {
 		perror("ts_config");
 		exit(1);
 	}

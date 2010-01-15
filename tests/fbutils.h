@@ -23,6 +23,7 @@
 
 extern __u32 xres, yres;
 
+struct tsdev *open_touchdev(const char *dev);
 int open_framebuffer(void);
 void close_framebuffer(void);
 void setcolor(unsigned colidx, unsigned value);

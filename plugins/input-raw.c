@@ -341,6 +341,7 @@ TSAPI struct tslib_module_info *mod_init(struct tsdev *dev, const char *params)
 		return NULL;
 
 	i->module.ops = &__ts_input_ops;
+	i->module.dev = dev;
 	i->current_x = 0;
 	i->current_y = 0;
 	i->current_p = 0;
@@ -348,7 +349,7 @@ TSAPI struct tslib_module_info *mod_init(struct tsdev *dev, const char *params)
 	i->using_syn = 0;
 	i->grab_events = 0;
 
-	if (tslib_parse_vars(&i->module, raw_vars, NR_VARS, params)) {
+	if (check_fd(i) || tslib_parse_vars(&i->module, raw_vars, NR_VARS, params)) {
 		free(i);
 		return NULL;
 	}

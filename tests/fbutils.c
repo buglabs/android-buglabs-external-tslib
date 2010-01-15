@@ -51,6 +51,20 @@ static char *defaultconsoledevice = "/dev/tty";
 static char *fbdevice = NULL;
 static char *consoledevice = NULL;
 
+struct tsdev *open_touchdev(const char *dev)
+{
+	struct tsdev *ts = ts_open(dev, 0);
+	if (!ts) {
+		perror("ts_open");
+		return NULL;
+	}
+	if (ts_config(ts)) {
+		ts_close(ts);
+		return NULL;
+	}
+	return ts;
+}
+
 int open_framebuffer(void)
 {
 	struct vt_stat vts;
