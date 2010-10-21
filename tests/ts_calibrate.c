@@ -189,7 +189,7 @@ static int clearbuf(struct tsdev *ts)
 	return 0;
 }
 
-int main()
+int main(int argc, char **argv)
 {
 	struct tsdev *ts;
 	calibration cal;
@@ -198,16 +198,23 @@ int main()
 	char *tsdevice = NULL;
 	char *calfile = NULL;
 	unsigned int i, len;
-	pid_t child;
 
-	child = fork();
-	if (child > 0) {
-		getchar();
-		kill(child, SIGKILL);
-		exit(0);
-	} else if (child < 0) {
-		perror("fork");
-		exit(-1);
+	/* if 'nofork' is given, skip the fork() trick. It confuses poor Android init's exec */
+	if (argc < 2 || strcmp(argv[1], "nofork")) {
+		pid_t child;
+
+		child = fork();
+		if (child > 0) {
+			getchar();
+			kill(child, SIGKILL);
+			exit(0);
+		} else if (child < 0) {
+			perror("fork");
+			exit(-1);
+		}
+	}
+	else {
+	 printf("not forking\n");
 	}
 
 	signal(SIGSEGV, sig);
@@ -218,6 +225,7 @@ int main()
 	tset = ts_setting(TS_ENV);
 
 	if( (tsdevice = getenv("TSLIB_TSDEVICE")) != NULL ) {
+		printf("trying configured TSDEVICE '%s'\n", tsdevice);
 		ts = open_touchdev(tsdevice);
 	} else if (tset != NULL) {
 		ts = open_touchdev(tset->tsdev);
@@ -228,7 +236,10 @@ int main()
 		for (i = 0; i <= 99; ++i) {
 			sprintf(tsdevice, "/dev/input/event%d", i);
 			if ((ts = open_touchdev(tsdevice)))
+			{
+				printf("successfully opened device '%s'\n", tsdevice);
 				break;
+			}
 		}
 		if (!ts)
 			ts = open_touchdev("/dev/touchscreen/ucb1x00");
@@ -295,6 +306,11 @@ int main()
 		printf("Calibration failed.\n");
 		i = -1;
 	}
+
+	put_string_center (xres / 2, yres / 4 + 20,
+			   "*** Calibration complete ***", 2);
+	put_string_center (xres / 2, yres / 4 + 40,
+			   "*** Wait for Android boot to complete ***", 2);
 
 	free(tset);
 	close_framebuffer();
