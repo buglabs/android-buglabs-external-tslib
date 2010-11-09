@@ -307,9 +307,9 @@ int main(int argc, char **argv)
 		i = -1;
 	}
 
-	put_string_center (xres / 2, yres / 4 + 20,
+	put_string_center (xres / 2, yres / 4 + 60,
 			   "*** Calibration complete ***", 2);
-	put_string_center (xres / 2, yres / 4 + 40,
+	put_string_center (xres / 2, yres / 4 + 80,
 			   "*** Wait for Android boot to complete ***", 2);
 
 	free(tset);
